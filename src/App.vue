@@ -1,26 +1,41 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app">
+    <NameNonograms msg="Welcome to Your Vue.js App"></NameNonograms>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NameNonograms from './components/NameNonograms.vue'
+import bcimg from '@/assets/jpg/background-Japan.jpg'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    NameNonograms
+  },
+  data() {
+    return {
+      bcimg: bcimg
+    }
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.app {
+  background-image: url(@/assets/jpg/background-Japan.jpg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  background-size: contain;
+  background-position: center;
 }
+
+.app img {
+  width: 100%;
+  height: 100vh;
+}
+
 </style>
