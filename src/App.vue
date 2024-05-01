@@ -1,17 +1,17 @@
 <template>
   <div class="app">
-    <NameNonograms msg="Welcome to Your Vue.js App"></NameNonograms>
+    <FieldNonograms></FieldNonograms>
   </div>
 </template>
 
 <script>
-import NameNonograms from './components/NameNonograms.vue'
+import FieldNonograms from './components/FieldNonograms.vue'
 import bcimg from '@/assets/jpg/background-Japan.jpg'
 
 export default {
   name: 'App',
   components: {
-    NameNonograms
+    FieldNonograms
   },
   data() {
     return {

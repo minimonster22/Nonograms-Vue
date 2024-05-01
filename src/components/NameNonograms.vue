@@ -1,25 +1,37 @@
 <template>
   <div ref="wrapper" class="name-wrapper">
-    <div v-for="(solution, index) in solutions" :key="index" class="solution-item">
+    <div v-for="(solution, index) in solutions" :key="index"
+         :class="{ 'solution-item': true, 'active': index === activeIndex }"
+         @click="setActive(index)">
       <p>{{ solution.name }}</p>
     </div>
   </div>
+
 </template>
 
 <script>
+import solutions from '@/assets/data/solutions.json';
+
+
 
 export default {
   data() {
     return {
-      solutions: [
-        { name: "Heart" },
-        { name: "Eye in dark" },
-        { name: "Eye" },
-        { name: "Octopus" },
-        { name: "Snake" }
-      ]
+      solutions: solutions,
+      activeIndex: 1,
     };
   },
+  methods: {
+    setActive(index) {
+      console.log('setActive method called with index:', index);
+      this.activeIndex = index;
+      console.log('activeIndex after setting:', this.activeIndex);
+      this.$emit('update-active-index', this.activeIndex); // Отправляем событие обновления активного индекса
+    }
+  },
+  mounted() {
+    console.log('activeIndex on mount:', this.activeIndex);
+  }
 };
 </script>
 
@@ -27,11 +39,6 @@ export default {
 .name-wrapper {
   display: flex;
   flex-direction: column;
-  background-color: #E54814;
-  color: #EFEFEF;
-  font-family: "Black Ops One", system-ui;
-  font-size: 20px;
-  font-weight: bold;
   width: fit-content;
   position: absolute;
   top: 5%;
@@ -42,7 +49,17 @@ export default {
   padding: 5px;
   text-align: center;
   border: 1px solid black;
+  background-color: #E54814;
+  color: #EFEFEF;
+  font-family: "Black Ops One", system-ui;
+  font-size: 20px;
+  font-weight: bold;
 }
+
+.solution-item.active {
+  background-color: black;
+}
+
 p {
   margin: 0;
 }
