@@ -40,8 +40,6 @@ export default {
   display: flex;
   flex-direction: column;
   width: fit-content;
-  position: absolute;
-  top: 5%;
 }
 
 .solution-item {
