@@ -32,7 +32,7 @@
           </div>
           <div class="nonogram-board">
             <div v-for="(row, rowIndex) in solutions[activeIndex].dataField" :key="rowIndex" class="row-board">
-              <div v-for="(cell, cellIndex) in row" :key="cellIndex" :data-id="cell" class="cell-board">
+              <div v-for="(cell, cellIndex) in row" :key="cellIndex" :data-id="0" class="cell-board">
               </div>
             </div>
           </div>
@@ -66,10 +66,20 @@ export default {
     handleActiveIndexUpdate(index) {
       console.log('Active index updated in parent:', index);
       this.activeIndex = index;
+    },
+    saveToLocalStorage(cell) {
+      // Преобразуйте значение cell в строку, если оно не является строкой
+      const cellData = typeof cell === 'string' ? cell : JSON.stringify(cell);
+
+      // Сохраняем данные в локальное хранилище с ключом, например, 'cellData'
+      localStorage.setItem('cellData', cellData);
     }
   },
   mounted() {
-    console.log('Active Index:', this.activeIndex);
+    if (this.activeIndex !== null && this.solutions[this.activeIndex]) {
+      const cellData = this.solutions[this.activeIndex].dataField.flat();
+      localStorage.setItem('cellData', JSON.stringify(cellData));
+    }
   }
 };
 </script>

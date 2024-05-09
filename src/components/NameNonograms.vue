@@ -2,7 +2,7 @@
   <div ref="wrapper" class="name-wrapper">
     <div v-for="(solution, index) in solutions" :key="index"
          :class="{ 'solution-item': true, 'active': index === activeIndex }"
-         @click="setActive(index)">
+         @click="setActive(index); saveDataToLocalStorage()">
       <p>{{ solution.name }}</p>
     </div>
   </div>
@@ -12,13 +12,12 @@
 <script>
 import solutions from '@/assets/data/solutions.json';
 
-
-
 export default {
   data() {
     return {
       solutions: solutions,
       activeIndex: 1,
+      dataField: solutions
     };
   },
   methods: {
@@ -26,7 +25,11 @@ export default {
       console.log('setActive method called with index:', index);
       this.activeIndex = index;
       console.log('activeIndex after setting:', this.activeIndex);
-      this.$emit('update-active-index', this.activeIndex); // Отправляем событие обновления активного индекса
+      this.$emit('update-active-index', this.activeIndex);
+    },
+    saveDataToLocalStorage() {
+      const cellData = this.dataField[this.activeIndex].dataField.flat();
+      localStorage.setItem('cellData', JSON.stringify(cellData));
     }
   },
   mounted() {
