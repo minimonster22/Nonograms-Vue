@@ -32,7 +32,11 @@
           </div>
           <div class="nonogram-board">
             <div v-for="(row, rowIndex) in solutions[activeIndex].dataField" :key="rowIndex" class="row-board">
-              <div v-for="(cell, cellIndex) in row" :key="cellIndex" :data-id="0" class="cell-board">
+              <div v-for="(cell, cellIndex) in row" :key="cellIndex"
+                   :data-id="0"
+                   class="cell-board"
+                   @click="event => toggleCell(rowIndex, cellIndex, event)"
+                   @contextmenu.stop="handleRightClick($event)">
               </div>
             </div>
           </div>
@@ -67,12 +71,38 @@ export default {
       console.log('Active index updated in parent:', index);
       this.activeIndex = index;
     },
-    saveToLocalStorage(cell) {
-      // Преобразуйте значение cell в строку, если оно не является строкой
-      const cellData = typeof cell === 'string' ? cell : JSON.stringify(cell);
+    toggleCell(rowIndex, cellIndex, event) {
+      const item = event.currentTarget;
+      let target = event.target;
+      const currentDataId = item.getAttribute('data-id');
+      const newDataId = currentDataId === '0' ? '1' : '0';
+      item.setAttribute('data-id', newDataId);
 
-      // Сохраняем данные в локальное хранилище с ключом, например, 'cellData'
-      localStorage.setItem('cellData', cellData);
+      if (target.classList.contains('cross-cell')) {
+        item.classList.toggle('black');
+        target.remove();
+      } else {
+        item.classList.toggle('black');
+      }
+
+      this.solutions[this.activeIndex].dataField[rowIndex][cellIndex] = parseInt(newDataId);
+    },
+    handleRightClick(event) {
+      event.preventDefault();
+      let item = event.currentTarget;
+      let existingCrossCell = item.querySelector('.cross-cell');
+
+      if (existingCrossCell) {
+        existingCrossCell.remove();
+      } else {
+        let crossCell = document.createElement('span');
+        crossCell.className = "cross-cell";
+        item.appendChild(crossCell);
+      }
+
+      if (item.classList.contains('black')) {
+        item.classList.remove('black');
+      }
     }
   },
   mounted() {
@@ -171,4 +201,34 @@ export default {
   display: flex;
 }
 
+.black {
+  background-color: black;
+}
+</style>
+
+<style>
+.cross-cell {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background-color: black;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+}
 </style>
