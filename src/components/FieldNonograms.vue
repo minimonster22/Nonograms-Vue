@@ -1,6 +1,6 @@
 <template>
   <div class="inside">
-    <NameNonograms @update-active-index="handleActiveIndexUpdate" :activeIndex="activeIndex" :name="name"/>
+    <NameNonograms @update-active-index="handleActiveIndexUpdate" @reset-data-id="resetDataId" :activeIndex="activeIndex" :name="name"/>
     <div v-if="activeIndex !== null && solutions[activeIndex]">
       <h2>{{ solutions[activeIndex].name }}</h2>
       <div class="main-wrapper">
@@ -43,9 +43,9 @@
         </div>
       </div>
     </div>
-    <Modal :show="showModal" @close="showModal = false">
+    <ModalNonograms :show="showModal" @close="showModal = false">
       <h1>Игра окончена!</h1>
-    </Modal>
+    </ModalNonograms>
   </div>
 </template>
 
@@ -53,7 +53,7 @@
 
 import solutions from '@/assets/data/solutions.json';
 import NameNonograms from "@/components/NameNonograms.vue";
-import Modal from '@/components/ModalNonograms.vue';
+import ModalNonograms from '@/components/ModalNonograms.vue';
 
 export default {
   props: ['name'],
@@ -69,13 +69,24 @@ export default {
   },
   components: {
     NameNonograms,
-    Modal
+    ModalNonograms
   },
   methods: {
     handleActiveIndexUpdate(index) {
       console.log('Active index updated in parent:', index);
       this.activeIndex = index;
     },
+    resetDataId() {
+      let dataIdsALL = document.querySelectorAll('.cell-board');
+      dataIdsALL.forEach(element => {
+        element.setAttribute('data-id', '0');
+        element.classList.remove('black');
+      });
+
+      const cellDataNew = new Array(this.solutions[this.activeIndex].dataField.length * this.solutions[this.activeIndex].dataField[0].length).fill(0);
+      localStorage.setItem('cellDataNew', JSON.stringify(cellDataNew));
+    },
+
     toggleCell(rowIndex, cellIndex, event) {
       const item = event.currentTarget;
       let target = event.target;

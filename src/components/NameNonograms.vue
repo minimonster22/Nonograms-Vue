@@ -26,6 +26,7 @@ export default {
       this.activeIndex = index;
       console.log('activeIndex after setting:', this.activeIndex);
       this.$emit('update-active-index', this.activeIndex);
+      this.$emit('reset-data-id');
     },
     saveDataToLocalStorage() {
       const cellData = this.dataField[this.activeIndex].dataField.flat();
