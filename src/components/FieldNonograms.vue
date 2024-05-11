@@ -86,6 +86,9 @@ export default {
       }
 
       this.solutions[this.activeIndex].dataField[rowIndex][cellIndex] = parseInt(newDataId);
+      const cellDataNew = JSON.parse(localStorage.getItem('cellDataNew'));
+      cellDataNew[rowIndex * this.solutions[this.activeIndex].dataField[0].length + cellIndex] = parseInt(newDataId);
+      localStorage.setItem('cellDataNew', JSON.stringify(cellDataNew));
     },
     handleRightClick(event) {
       event.preventDefault();
@@ -107,10 +110,17 @@ export default {
   },
   mounted() {
     if (this.activeIndex !== null && this.solutions[this.activeIndex]) {
+      // Сохраняем cellData в Local Storage
       const cellData = this.solutions[this.activeIndex].dataField.flat();
       localStorage.setItem('cellData', JSON.stringify(cellData));
+
+      // Создаем новую строку cellDataNew в Local Storage
+      const cellDataNew = new Array(this.solutions[this.activeIndex].dataField.length * this.solutions[this.activeIndex].dataField[0].length).fill(0);
+      localStorage.setItem('cellDataNew', JSON.stringify(cellDataNew));
     }
   }
+
+
 };
 </script>
 
