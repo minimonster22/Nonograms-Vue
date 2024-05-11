@@ -42,8 +42,10 @@
           </div>
         </div>
       </div>
-      <p>Active Index: {{ activeIndex }}</p>
     </div>
+    <Modal :show="showModal" @close="showModal = false">
+      <h1>Игра окончена!</h1>
+    </Modal>
   </div>
 </template>
 
@@ -51,6 +53,7 @@
 
 import solutions from '@/assets/data/solutions.json';
 import NameNonograms from "@/components/NameNonograms.vue";
+import Modal from '@/components/ModalNonograms.vue';
 
 export default {
   props: ['name'],
@@ -60,11 +63,13 @@ export default {
       numbersTopArray: solutions,
       activeIndex: 1,
       numbersLeftArray: solutions,
-      dataField: solutions
+      dataField: solutions,
+      showModal: false
     };
   },
   components: {
-    NameNonograms
+    NameNonograms,
+    Modal
   },
   methods: {
     handleActiveIndexUpdate(index) {
@@ -89,6 +94,7 @@ export default {
       const cellDataNew = JSON.parse(localStorage.getItem('cellDataNew'));
       cellDataNew[rowIndex * this.solutions[this.activeIndex].dataField[0].length + cellIndex] = parseInt(newDataId);
       localStorage.setItem('cellDataNew', JSON.stringify(cellDataNew));
+      this.compareArrays();
     },
     handleRightClick(event) {
       event.preventDefault();
@@ -106,8 +112,24 @@ export default {
       if (item.classList.contains('black')) {
         item.classList.remove('black');
       }
-    }
+    },
+    compareArrays() {
+      const cellDataArray = JSON.parse(localStorage.getItem('cellData'));
+      const cellDataNewArray = JSON.parse(localStorage.getItem('cellDataNew'));
+
+      if (cellDataArray.length !== cellDataNewArray.length) {
+        return;
+      }
+
+      for (let i = 0; i < cellDataArray.length; i++) {
+        if (cellDataArray[i] !== cellDataNewArray[i]) {
+          return;
+        }
+      }
+      this.showModal = true;
+    },
   },
+
   mounted() {
     if (this.activeIndex !== null && this.solutions[this.activeIndex]) {
       // Сохраняем cellData в Local Storage
