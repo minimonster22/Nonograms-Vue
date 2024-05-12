@@ -2,7 +2,6 @@
   <div class="inside">
     <NameNonograms @update-active-index="handleActiveIndexUpdate" @reset-data-id="resetDataId" :activeIndex="activeIndex" :name="name"/>
     <div v-if="activeIndex !== null && solutions[activeIndex]">
-      <h2>{{ solutions[activeIndex].name }}</h2>
       <div class="main-wrapper">
         <div class="top-wrapper">
           <div class="top-wrapper empty"></div>
@@ -101,6 +100,19 @@ export default {
         item.classList.toggle('black');
       }
 
+      const blackCell = document.querySelector('.black')
+      const audioBlack = new Audio(require('@/assets/audio/happy-pop.mp3'));// почему такой путь работает? Почему при первом клике после загрузки не работает, load не помог
+      const audioRemoveBlack = new Audio(require('@/assets/audio/punch.mp3'));
+
+
+      if (blackCell) {
+        audioBlack.currentTime = 0;
+        audioBlack.play();
+      } else {
+        audioRemoveBlack.currentTime = 0;
+        audioRemoveBlack.play();
+      }
+
       this.solutions[this.activeIndex].dataField[rowIndex][cellIndex] = parseInt(newDataId);
       const cellDataNew = JSON.parse(localStorage.getItem('cellDataNew'));
       cellDataNew[rowIndex * this.solutions[this.activeIndex].dataField[0].length + cellIndex] = parseInt(newDataId);
@@ -111,17 +123,22 @@ export default {
       event.preventDefault();
       let item = event.currentTarget;
       let existingCrossCell = item.querySelector('.cross-cell');
+      const audioRemoveBlack = new Audio(require('@/assets/audio/punch.mp3'));
+      const audioCross = new Audio(require('@/assets/audio/fire-torch-whoosh.mp3'));
 
       if (existingCrossCell) {
         existingCrossCell.remove();
+        audioRemoveBlack.play();
       } else {
         let crossCell = document.createElement('span');
         crossCell.className = "cross-cell";
         item.appendChild(crossCell);
+        audioCross.play();
       }
 
       if (item.classList.contains('black')) {
         item.classList.remove('black');
+        audioRemoveBlack.play();
       }
     },
     compareArrays() {
@@ -137,6 +154,8 @@ export default {
           return;
         }
       }
+      const audioWin = new Audio(require('@/assets/audio/game-bonus.mp3'));
+      audioWin.play()
       this.showModal = true;
     },
   },
